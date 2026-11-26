@@ -1,0 +1,9 @@
+// Cloudflare Workers config: serves the Vite build output (dist/) as a static site.
+// _headers and _redirects inside dist/ are applied automatically.
+{
+  "name": "filecrawler",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist"
+  }
+}

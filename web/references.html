@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="description" content="Sources for the models, training data, test data, and software used by FileCrawler." />
+    <title>References — FileCrawler</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="privacy.css" />
+  </head>
+  <body class="plain-ui privacy-page">
+    <main class="page">
+      <header class="mast">
+        <a class="brand" href="./">FileCrawler</a>
+        <span class="tagline">References</span>
+      </header>
+
+      <article class="policy references">
+        <header class="policy-heading">
+          <p class="eyebrow">FileCrawler / sources</p>
+          <h1>References</h1>
+          <p class="policy-date">Last updated: November 19, 2026</p>
+          <p class="policy-summary">FileCrawler is built on open models, public datasets, and open-source software. This page lists where each one comes from. Every model and dataset keeps its own license and terms, which are listed on the linked page.</p>
+        </header>
+
+        <section>
+          <h2>Models used by the scanner</h2>
+          <p>The file-content scan runs one of two models in your browser. You pick which one before scanning.</p>
+          <ul>
+            <li><strong>GLiNER2.5-Decide (default).</strong> An off-the-shelf text classifier from Fastino, <a href="https://huggingface.co/fastino/GLiNER2.5-Decide" target="_blank" rel="noopener noreferrer">fastino/GLiNER2.5-Decide</a>. The scanner loads the 345 MB q4f16 mobile ONNX build, <a href="https://huggingface.co/onnx-community/GLiNER2.5-Decide-mobile-ONNX" target="_blank" rel="noopener noreferrer">onnx-community/GLiNER2.5-Decide-mobile-ONNX</a>, pinned to revision <code>880d192</code>.</li>
+            <li><strong>Spartan v6.</strong> Our team's model, fine-tuned from <a href="https://huggingface.co/fastino/gliner2.5-small-v1" target="_blank" rel="noopener noreferrer">fastino/gliner2.5-small-v1</a> (74M parameters) to separate records about a person from ordinary text that only mentions one. The browser loads the 143 MB fp16 ONNX build from <a href="https://huggingface.co/JACA369/sensitivity-scanner-v6" target="_blank" rel="noopener noreferrer">JACA369/sensitivity-scanner-v6</a>, pinned to commit <code>c368642</code>.</li>
+          </ul>
+          <p>Before either model runs, a set of pattern rules written by our team checks for items such as Social Security numbers, payment-card numbers, IBANs, and API keys. Those rules use no outside data.</p>
+        </section>
+
+        <section>
+          <h2>Spartan v6 training data</h2>
+          <p>Spartan v6 was trained on 8,983 English text blocks, built up over several rounds. Part of the data was written by our team's generators: sensitive and harmless records, notes, code, configuration files, logs, and look-alikes of each. The rest comes from these public datasets on Hugging Face:</p>
+          <ul>
+            <li><a href="https://huggingface.co/datasets/nvidia/Nemotron-PII" target="_blank" rel="noopener noreferrer">nvidia/Nemotron-PII</a>: documents containing personal information.</li>
+            <li><a href="https://huggingface.co/datasets/gretelai/synthetic_pii_finance_multilingual" target="_blank" rel="noopener noreferrer">gretelai/synthetic_pii_finance_multilingual</a>: synthetic financial documents, English portion only.</li>
+            <li><a href="https://huggingface.co/datasets/harishnair04/mtsamples" target="_blank" rel="noopener noreferrer">harishnair04/mtsamples</a>: MTSamples medical transcriptions.</li>
+            <li><a href="https://huggingface.co/datasets/starmpcc/Asclepius-Synthetic-Clinical-Notes" target="_blank" rel="noopener noreferrer">starmpcc/Asclepius-Synthetic-Clinical-Notes</a>: synthetic clinical notes.</li>
+            <li><a href="https://huggingface.co/datasets/hugsid/legal-contracts" target="_blank" rel="noopener noreferrer">hugsid/legal-contracts</a>: contract text, used as harmless examples.</li>
+            <li><a href="https://huggingface.co/datasets/wikimedia/wikipedia" target="_blank" rel="noopener noreferrer">wikimedia/wikipedia</a> (English snapshot <code>20231101.en</code>): encyclopedia articles, used as harmless examples.</li>
+            <li><a href="https://huggingface.co/datasets/fancyzhx/ag_news" target="_blank" rel="noopener noreferrer">fancyzhx/ag_news</a>: AG News articles, used as harmless examples.</li>
+          </ul>
+          <p>Any training example sharing an 8-word phrase with a test file was removed, so the model was never trained on the text it is evaluated on.</p>
+        </section>
+
+        <section>
+          <h2>Evaluation data</h2>
+          <p>Both models were compared on 647 English test files. 403 of them were written for the project by our team. The other 244 come from public data:</p>
+          <ul>
+            <li>113 held-out items from the training sources above, which the model never saw.</li>
+            <li>131 items from nine public datasets that no model was trained on:
+              <ul>
+            <li><a href="https://huggingface.co/datasets/ai4privacy/pii-masking-400k" target="_blank" rel="noopener noreferrer">ai4privacy/pii-masking-400k</a>: text containing personal information.</li>
+            <li><a href="https://huggingface.co/datasets/AGBonnet/augmented-clinical-notes" target="_blank" rel="noopener noreferrer">AGBonnet/augmented-clinical-notes</a>: clinical reports.</li>
+            <li><a href="https://huggingface.co/datasets/coastalcph/lex_glue" target="_blank" rel="noopener noreferrer">coastalcph/lex_glue</a> (LEDGAR subset): clauses from SEC-filed contracts.</li>
+            <li><a href="https://huggingface.co/datasets/FiscalNote/billsum" target="_blank" rel="noopener noreferrer">FiscalNote/billsum</a>: U.S. legislation.</li>
+            <li><a href="https://huggingface.co/datasets/abisee/cnn_dailymail" target="_blank" rel="noopener noreferrer">abisee/cnn_dailymail</a>: CNN and Daily Mail news articles.</li>
+            <li><a href="https://huggingface.co/datasets/Yale-LILY/aeslc" target="_blank" rel="noopener noreferrer">Yale-LILY/aeslc</a>: Enron email.</li>
+            <li><a href="https://huggingface.co/datasets/code-search-net/code_search_net" target="_blank" rel="noopener noreferrer">code-search-net/code_search_net</a>: source code.</li>
+            <li><a href="https://huggingface.co/datasets/stanfordnlp/imdb" target="_blank" rel="noopener noreferrer">stanfordnlp/imdb</a>: movie reviews.</li>
+            <li><a href="https://huggingface.co/datasets/gfissore/arxiv-abstracts-2021" target="_blank" rel="noopener noreferrer">gfissore/arxiv-abstracts-2021</a>: arXiv paper abstracts.</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Software</h2>
+          <ul>
+            <li><a href="https://github.com/huggingface/transformers.js" target="_blank" rel="noopener noreferrer">Transformers.js</a> <code>4.3.0</code> and <a href="https://onnxruntime.ai/" target="_blank" rel="noopener noreferrer">ONNX Runtime Web</a> run the scanner's models with WebGPU (Apache-2.0 and MIT).</li>
+            <li><a href="https://github.com/mozilla/pdf.js" target="_blank" rel="noopener noreferrer">PDF.js</a> <code>4.10.38</code> extracts text from PDFs (Apache-2.0).</li>
+            <li><a href="https://github.com/101arrowz/fflate" target="_blank" rel="noopener noreferrer">fflate</a> <code>0.8.3</code> unpacks Office and OpenDocument files (MIT).</li>
+            <li><a href="https://developers.google.com/identity/oauth2/web/guides/use-token-model" target="_blank" rel="noopener noreferrer">Google Identity Services</a> and the <a href="https://developers.google.com/drive/api/reference/rest/v3" target="_blank" rel="noopener noreferrer">Google Drive API</a> handle sign-in and file access.</li>
+          </ul>
+          <p>Parts of this site's browser code are adapted from <a href="https://github.com/TheoLeeCJ/SemIf-OpenJev" target="_blank" rel="noopener noreferrer">SemIf (formerly OpenJev)</a> by TheoLeeCJ, an independent MIT-licensed project that runs language models locally in the browser. That code keeps its original license in <a href="SEMIF_LICENSE">SEMIF_LICENSE</a>.</p>
+          <p>Full version pins and license notes are in <a href="THIRD_PARTY.md">THIRD_PARTY.md</a> and <a href="UPSTREAM.md">UPSTREAM.md</a>.</p>
+        </section>
+      </article>
+
+      <footer><span>FileCrawler / browser-only exposure audit</span><span><a href="./">FileCrawler</a> · <a href="privacy.html">Privacy</a></span></footer>
+    </main>
+  </body>
+</html>
