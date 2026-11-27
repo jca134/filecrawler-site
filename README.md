@@ -15,8 +15,7 @@ Browser → document extraction and local model inference
 
 There is no application server, Cloudflare Function, Worker, database, client
 secret, session cookie, or backend API. Drive data travels from Google directly
-to the authorized browser tab. Restricted and private file contents are never
-downloaded.
+to the authorized browser tab. Private file contents are never downloaded.
 
 ## Requirements
 
@@ -31,13 +30,18 @@ Authorized JavaScript origins:
 
 ```text
 http://localhost:8080
-https://your-project.pages.dev
-https://your-custom-domain.example
+https://filecrawler.jadenaguilon.com
+https://filecrawler-site.jadaguilon.workers.dev
 ```
 
-The popup token flow does not use an authorized redirect URI. Cloudflare preview
-deployments have distinct origins; Google login works only on origins registered
-on the OAuth client.
+Origins must match exactly: scheme, host and port, with no trailing slash or
+path. The popup token flow does not use an authorized redirect URI. Cloudflare
+preview deployments have distinct origins; Google login works only on origins
+registered on the OAuth client.
+
+The production site is served at `https://filecrawler.jadenaguilon.com`, a
+custom domain attached to the `filecrawler-site` Worker. Add `jadenaguilon.com`
+as an authorized domain on the OAuth consent screen.
 
 Declare both scopes on the OAuth consent screen:
 
@@ -105,8 +109,9 @@ authorization page uses popup-compatible headers.
 metadata, owners, and sharing permissions without reading file contents.
 
 **File content** requests `drive.readonly`. Permissions are checked first. Only
-files with an `anyone` permission are downloaded or exported, with a 20 MB input
-limit and a 500-word model limit. Supported formats include Google Docs, Sheets,
+files shared with someone else (anyone, or specific people, groups, or domains)
+are downloaded or exported, with a 20 MB input limit and a 500-word model
+limit. Private files are never downloaded. Supported formats include Google Docs, Sheets,
 Slides and Drawings, text and common structured text, PDF, DOCX, XLSX, PPTX, and
 OpenDocument files.
 

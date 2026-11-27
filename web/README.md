@@ -11,7 +11,8 @@ choice made before authorization:
 - content: `drive.readonly`.
 
 Permission metadata is always checked first. Content mode downloads or exports
-only files with an `anyone` permission. Text extraction and model inference both
+only files shared with someone else (anyone, or specific people, groups, or
+domains); private files are never downloaded. Text extraction and model inference both
 run in the browser, with a 20 MB file limit and a 500-word model limit.
 
 `authorize.html` intentionally has popup-compatible COOP headers. After Google

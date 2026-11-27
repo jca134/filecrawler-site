@@ -55,7 +55,7 @@ const modeDetails = {
     connected: "Connected in content mode. Load a local model before scanning.",
     scanning: "Reading permissions, then reading samples from shared and public files…",
     boundary: "Permissions are checked first. Only files shared with someone else are read (private files never are), and only the amount of each file you chose above is checked by the in-browser model.",
-    scope: "This session uses drive.readonly. Restricted and private files remain metadata-only; content is extracted only for files available to anyone.",
+    scope: "This session uses drive.readonly. Private files remain metadata-only; content is extracted only from files shared with anyone or with specific people, groups, or domains.",
   },
 };
 
